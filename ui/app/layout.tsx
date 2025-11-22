@@ -5,9 +5,6 @@ import "./globals.css";
 import { GitHubLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { AuthButton } from "@/components/auth/auth-button";
-import { Suspense } from "react";
-import { Header } from "@/components/ui/header";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`

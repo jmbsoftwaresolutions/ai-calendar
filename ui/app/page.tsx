@@ -1,6 +1,5 @@
 import { CalendarInput } from "@/components/calendar-input";
 import { Header } from "@/components/ui/header";
-import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function Home() {
