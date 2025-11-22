@@ -30,7 +30,8 @@ Deno.serve(async (req) => {
   If the user gives a date that is "next <day of week>", respond with the occurrence in the next week.
   If the user gives a date that is "this <day of week>", respond with the occurrence in the current week.
   If the user gives a date but does not specify a year, assume the current year unless that date has already passed.
-  If the user gives a quarter (e.g., "next quarter"), respond with a date corresponding to that quarter
+  If the user gives a quarter (e.g., "next quarter"), respond with a date corresponding to that quarter.
+  If the user gives a holiday (e.g., "Christmas"), respond with the date of that holiday in the current year or next year if it has already passed.
   Today's date is ${new Date().toISOString().split("T")[0]}.
   
   `;
