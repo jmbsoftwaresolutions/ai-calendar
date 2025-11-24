@@ -12,11 +12,18 @@ import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { sendPrompt } from "@/server/openai-calendar";
 import { TextArea } from "./ui/textarea";
+import { CalendarSelection } from "./calendar-selection";
 export function CalendarInput({
   className,
+  calendarList,
   ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+}: React.ComponentPropsWithoutRef<"div"> & {
+  calendarList?: any[];
+}) {
   const [input, setInput] = useState("");
+  const [calendar, setCalendar] = useState<any>(
+    calendarList?.length === 1 ? calendarList[0] : null
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,19 +31,24 @@ export function CalendarInput({
     e.preventDefault();
     setIsLoading(true);
 
-    const { date, error } = await sendPrompt(input);
+    const { date, error } = await sendPrompt(input, calendar.id);
 
     if (error) {
       setError(error.message);
       setIsLoading(false);
       return;
     }
-    alert(`Extracted date: ${date}`);
+    alert(`Extracted date: ${JSON.stringify(date, null, 2)}`);
     setIsLoading(false);
   };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <CalendarSelection
+        calendarList={calendarList!}
+        onCalendarSelect={(calendar) => setCalendar(calendar)}
+        selectedCalendar={calendar}
+      />
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">AI Calendar</CardTitle>
@@ -57,7 +69,11 @@ export function CalendarInput({
               </div>
 
               {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isLoading || !calendar}
+              >
                 {isLoading ? "Processing..." : "Submit"}
               </Button>
             </div>
