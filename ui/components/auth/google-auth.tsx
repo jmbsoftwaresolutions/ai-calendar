@@ -12,7 +12,6 @@ export default function GoogleAuth({ callback }: { callback?: string }) {
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user);
-      console.log("GoogleAuth user:", data.user);
     });
   }, [supabase?.auth]);
 
@@ -37,10 +36,12 @@ export default function GoogleAuth({ callback }: { callback?: string }) {
         <div className="flex items-center gap-4 mr-5">
           Hey, {user.user_metadata?.full_name || user.email}!
           {user.user_metadata?.avatar_url ? (
-            <img
+            <Image
               src={user.user_metadata?.avatar_url}
               alt="Avatar"
-              className="w-8 h-8 rounded-full"
+              className="w-12 h-12 rounded-full"
+              width={64}
+              height={64}
             />
           ) : (
             ""

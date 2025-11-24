@@ -10,35 +10,68 @@ import {
 import { cn } from "@/lib/utils";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
-import { sendPrompt } from "@/server/openai-calendar";
+import { createEvent } from "@/server/openai-calendar";
 import { TextArea } from "./ui/textarea";
 import { CalendarSelection } from "./calendar-selection";
+import { calendar_v3 } from "googleapis";
+import Schema$CalendarListEntry = calendar_v3.Schema$CalendarListEntry;
+
 export function CalendarInput({
   className,
   calendarList,
   ...props
 }: React.ComponentPropsWithoutRef<"div"> & {
-  calendarList?: any[];
+  calendarList?: Schema$CalendarListEntry[];
 }) {
   const [input, setInput] = useState("");
-  const [calendar, setCalendar] = useState<any>(
-    calendarList?.length === 1 ? calendarList[0] : null
-  );
+  const [calendar, setCalendar] = useState<
+    Schema$CalendarListEntry | undefined
+  >(calendarList?.length === 1 ? calendarList[0] : undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [eventLink, setEventLink] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const { date, error } = await sendPrompt(input, calendar.id);
+    // const { event, error } = await sendPrompt(input);
 
-    if (error) {
-      setError(error.message);
-      setIsLoading(false);
-      return;
+    const event = {
+      summary: "Test Event",
+      location: "444 Test St, Test City, TS 12345",
+      description: "Test Event for ai-calendar.",
+      start: {
+        dateTime: "2025-11-28T09:00:00-07:00",
+        timeZone: "America/New_York",
+      },
+      end: {
+        dateTime: "2025-11-28T17:00:00-07:00",
+        timeZone: "America/New_York",
+      },
+      recurrence: ["RRULE:FREQ=DAILY;COUNT=2"],
+      attendees: [
+        { email: "james.bales@hotmail.com" },
+        { email: "jmbsoftwaresolutions@outlook.com" },
+      ],
+      reminders: {
+        useDefault: false,
+        overrides: [
+          { method: "email", minutes: 24 * 60 },
+          { method: "popup", minutes: 10 },
+        ],
+      },
+    };
+
+    if (calendar?.id) {
+      const { htmlLink, error } = await createEvent(calendar?.id, event);
+
+      console.log("Event link received:", htmlLink);
+
+      if (error) setError(error.message);
+      else setEventLink(htmlLink!);
     }
-    alert(`Extracted date: ${JSON.stringify(date, null, 2)}`);
     setIsLoading(false);
   };
 
@@ -78,6 +111,11 @@ export function CalendarInput({
               </Button>
             </div>
           </form>
+          <a href={eventLink || ""} target="_blank" rel="noopener noreferrer">
+            {eventLink && (
+              <p className="mt-4 text-blue-500 underline">View Event Link</p>
+            )}
+          </a>
         </CardContent>
       </Card>
     </div>

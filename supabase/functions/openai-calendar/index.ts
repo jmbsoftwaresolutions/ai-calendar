@@ -36,6 +36,34 @@ Deno.serve(async (req) => {
   
   `;
 
+  /*
+    const event = {
+      summary: "Google I/O 2015",
+      location: "800 Howard St., San Francisco, CA 94103",
+      description: "A chance to hear more about Google's developer products.",
+      start: {
+        dateTime: "2015-05-28T09:00:00-07:00",
+        timeZone: "America/Los_Angeles",
+      },
+      end: {
+        dateTime: "2015-05-28T17:00:00-07:00",
+        timeZone: "America/Los_Angeles",
+      },
+      recurrence: ["RRULE:FREQ=DAILY;COUNT=2"],
+      attendees: [
+        { email: "lpage@example.com" },
+        { email: "sbrin@example.com" },
+      ],
+      reminders: {
+        useDefault: false,
+        overrides: [
+          { method: "email", minutes: 24 * 60 },
+          { method: "popup", minutes: 10 },
+        ],
+      },
+    };
+    */
+
   // Documentation here: https://github.com/openai/openai-node
   const chatCompletion = await openai.chat.completions.create({
     messages: [
@@ -50,13 +78,19 @@ Deno.serve(async (req) => {
 
   console.log("Prompt received:", query);
 
-  const reply = chatCompletion.choices[0].message.content;
+  try {
+    //Ensure it's valid JSON
+    const event = JSON.parse(chatCompletion.choices[0].message.content);
 
-  console.log("Reply sent:", reply);
+    console.log("Event sent:", event);
 
-  return new Response(reply, {
-    headers: { "Content-Type": "text/plain" },
-  });
+    return new Response(JSON.stringify(event), {
+      headers: { "Content-Type": "text/plain" },
+    });
+  } catch (error) {
+    console.error("Error processing OpenAI response:", error);
+    return new Response("Error processing request", { status: 500 });
+  }
 });
 
 /* To invoke locally:

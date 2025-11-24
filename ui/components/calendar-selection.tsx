@@ -8,6 +8,8 @@ import {
 } from "./ui/card";
 import { cn } from "@/lib/utils";
 import { CheckCircleIcon } from "lucide-react";
+import { calendar_v3 } from "googleapis";
+import Schema$CalendarListEntry = calendar_v3.Schema$CalendarListEntry;
 
 export function CalendarSelection({
   className,
@@ -16,11 +18,10 @@ export function CalendarSelection({
   selectedCalendar,
   ...props
 }: React.ComponentPropsWithoutRef<"div"> & {
-  calendarList: any[];
-  onCalendarSelect: (calendar: any) => void;
-  selectedCalendar?: any;
+  calendarList: Schema$CalendarListEntry[];
+  onCalendarSelect: (calendar: Schema$CalendarListEntry) => void;
+  selectedCalendar?: Schema$CalendarListEntry;
 }) {
-  console.log("CalendarSelection calendarList:", calendarList);
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>

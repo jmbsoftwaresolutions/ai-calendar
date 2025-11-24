@@ -1,5 +1,4 @@
 import { CalendarInput } from "@/components/calendar-input";
-import { CalendarSelection } from "@/components/calendar-selection";
 import { Header } from "@/components/ui/header";
 import { createClient } from "@/lib/supabase/server";
 import { getCalendars } from "@/server/openai-calendar";
