@@ -17,7 +17,6 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
       const session = await supabase.auth.getSession();
-      console.log("Auth callback session:", session);
       //Store token
       const { error } = await supabase.from("user_google_tokens").upsert([
         {
