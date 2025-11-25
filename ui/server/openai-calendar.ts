@@ -45,7 +45,7 @@ export async function sendPrompt(
       error: { name: "Error", message: "Unexpected error occurred" },
     };
   } else {
-    return { event: data };
+    return { event: JSON.parse(data) };
   }
 }
 

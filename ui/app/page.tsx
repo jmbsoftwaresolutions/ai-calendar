@@ -6,7 +6,7 @@ import { getCalendars } from "@/server/openai-calendar";
 export default async function Home() {
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
-  const calendars = await getCalendars();
+  const calendars = data?.claims ? await getCalendars() : { list: [] };
   return (
     <>
       <Header />

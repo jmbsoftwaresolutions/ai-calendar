@@ -20,9 +20,36 @@ Deno.serve(async (req) => {
 
   const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
-  const systemPrompt = `You are an AI assistant that translates text into a date. 
-  Only respond with the date in ISO format.
-  If the text does not contain a date, respond with "null".
+  const systemPrompt = `You are an AI assistant that translates text into a google calendar event in JSON format. 
+  Only respond with a JSON object with the following format:
+  {
+      summary: "<Event Title>",
+      location: "<Event Location>",
+      description: "<Event Description>",
+      start: {
+        dateTime: "<Event Start DateTime in ISO 8601 format>",
+        timeZone: "America/New_York"
+      },
+      end: {
+        dateTime: "<Event End DateTime in ISO 8601 format>",
+        timeZone: "America/New_York"
+      }
+    }
+  The user is going to provide text that describes an event they want to create.
+  Your job is to extract the relevant information from the text and format it into the JSON object above.
+  
+  Guidelines:
+  - Always respond with a single JSON object and nothing else.
+  - Ensure dateTime fields are in ISO 8601 format.
+  - Summarize the event in <Event Title>.
+  - If location, description, or other fields are not provided in the text, omit them from the JSON object.
+  - Use the "start" and "end" fields to indicate when the event begins and ends.
+  - Use the "America/New_York" timezone for all dateTime fields.
+  - If the text does not provide certain fields (like location, description, attendees, reminders), omit those fields from the JSON object.
+  - Focus on extracting accurate start and end dateTime values from the text.
+  - If the text does not specify an end time, assume the event lasts one hour.
+  
+  Date Extraction Rules:
   If the user gives a day of the week, respond with the next occurrence of that day.
   If the user gives a date that has already passed this year, respond with that date next year.
   If the text contains multiple dates, respond with the first date mentioned.
@@ -35,34 +62,6 @@ Deno.serve(async (req) => {
   Today's date is ${new Date().toISOString().split("T")[0]}.
   
   `;
-
-  /*
-    const event = {
-      summary: "Google I/O 2015",
-      location: "800 Howard St., San Francisco, CA 94103",
-      description: "A chance to hear more about Google's developer products.",
-      start: {
-        dateTime: "2015-05-28T09:00:00-07:00",
-        timeZone: "America/Los_Angeles",
-      },
-      end: {
-        dateTime: "2015-05-28T17:00:00-07:00",
-        timeZone: "America/Los_Angeles",
-      },
-      recurrence: ["RRULE:FREQ=DAILY;COUNT=2"],
-      attendees: [
-        { email: "lpage@example.com" },
-        { email: "sbrin@example.com" },
-      ],
-      reminders: {
-        useDefault: false,
-        overrides: [
-          { method: "email", minutes: 24 * 60 },
-          { method: "popup", minutes: 10 },
-        ],
-      },
-    };
-    */
 
   // Documentation here: https://github.com/openai/openai-node
   const chatCompletion = await openai.chat.completions.create({
@@ -80,9 +79,13 @@ Deno.serve(async (req) => {
 
   try {
     //Ensure it's valid JSON
-    const event = JSON.parse(chatCompletion.choices[0].message.content);
+    const response = chatCompletion.choices[0].message.content;
 
-    console.log("Event sent:", event);
+    console.log("OpenAI response:", response);
+
+    const event = JSON.parse(response);
+
+    console.log("Event:", event);
 
     return new Response(JSON.stringify(event), {
       headers: { "Content-Type": "text/plain" },

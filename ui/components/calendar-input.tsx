@@ -10,7 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
-import { createEvent } from "@/server/openai-calendar";
+import { createEvent, sendPrompt } from "@/server/openai-calendar";
 import { TextArea } from "./ui/textarea";
 import { CalendarSelection } from "./calendar-selection";
 import { calendar_v3 } from "googleapis";
@@ -36,33 +36,13 @@ export function CalendarInput({
     e.preventDefault();
     setIsLoading(true);
 
-    // const { event, error } = await sendPrompt(input);
+    const { event, error } = await sendPrompt(input);
 
-    const event = {
-      summary: "Test Event",
-      location: "444 Test St, Test City, TS 12345",
-      description: "Test Event for ai-calendar.",
-      start: {
-        dateTime: "2025-11-28T09:00:00-07:00",
-        timeZone: "America/New_York",
-      },
-      end: {
-        dateTime: "2025-11-28T17:00:00-07:00",
-        timeZone: "America/New_York",
-      },
-      recurrence: ["RRULE:FREQ=DAILY;COUNT=2"],
-      attendees: [
-        { email: "james.bales@hotmail.com" },
-        { email: "jmbsoftwaresolutions@outlook.com" },
-      ],
-      reminders: {
-        useDefault: false,
-        overrides: [
-          { method: "email", minutes: 24 * 60 },
-          { method: "popup", minutes: 10 },
-        ],
-      },
-    };
+    if (error) {
+      setError(error.message);
+      setIsLoading(false);
+      return;
+    }
 
     if (calendar?.id) {
       const { htmlLink, error } = await createEvent(calendar?.id, event);
@@ -72,6 +52,7 @@ export function CalendarInput({
       if (error) setError(error.message);
       else setEventLink(htmlLink!);
     }
+
     setIsLoading(false);
   };
 
