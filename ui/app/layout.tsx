@@ -37,29 +37,33 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
-          <footer className="w-full flex items-center justify-center gap-8 py-5 border-t-2 fixed bottom-0 bg-gray-100">
-            <a href="https://www.linkedin.com/in/james-bales-827a558/">
-              <LinkedInLogoIcon
-                className="text-muted-foreground"
-                width={30}
-                height={30}
-              />
-            </a>
-            <a href="https://github.com/jmbsoftwaresolutions">
-              <GitHubLogoIcon
-                className="text-muted-foreground"
-                width={30}
-                height={30}
-              />
-            </a>
-            <Button>
-              <Link
-                target="_blank"
-                href="https://jmbsoftwaresolutions.dev/contact"
-              >
-                Contact
-              </Link>
-            </Button>
+          <footer className="w-full flex items-center justify-between gap-8 py-5 border-t-2 fixed bottom-0 bg-gray-100 px-8">
+            <div />
+            <div className="flex items-center gap-8">
+              <a href="https://www.linkedin.com/in/james-bales-827a558/">
+                <LinkedInLogoIcon
+                  className="text-muted-foreground"
+                  width={30}
+                  height={30}
+                />
+              </a>
+              <a href="https://github.com/jmbsoftwaresolutions">
+                <GitHubLogoIcon
+                  className="text-muted-foreground"
+                  width={30}
+                  height={30}
+                />
+              </a>
+              <Button>
+                <Link
+                  target="_blank"
+                  href="https://jmbsoftwaresolutions.dev/contact"
+                >
+                  Contact
+                </Link>
+              </Button>
+            </div>
+            <Link href="/privacy-policy">Privacy Policy</Link>
           </footer>
         </ThemeProvider>
       </body>
