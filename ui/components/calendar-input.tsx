@@ -92,11 +92,23 @@ export function CalendarInput({
               </Button>
             </div>
           </form>
-          <a href={eventLink || ""} target="_blank" rel="noopener noreferrer">
-            {eventLink && (
-              <p className="mt-4 text-blue-500 underline">View Event Link</p>
-            )}
-          </a>
+          {eventLink ? (
+            <>
+              <div className="flex justify-between mt-4">
+                Success!
+                <a
+                  href={eventLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-4 text-blue-500 underline"
+                >
+                  View Event Link
+                </a>
+              </div>
+            </>
+          ) : (
+            ""
+          )}
         </CardContent>
       </Card>
     </div>
