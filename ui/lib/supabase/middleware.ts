@@ -1,11 +1,12 @@
-import { createServerClient } from "@supabase/ssr";
+//import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
+  const supabaseResponse = NextResponse.next({
     request,
   });
 
+  /*
   // With Fluid compute, don't put this client in a global environment
   // variable. Always create a new one on each request.
   const supabase = createServerClient(
@@ -37,12 +38,13 @@ export async function updateSession(request: NextRequest) {
 
   // IMPORTANT: If you remove getClaims() and you use server-side rendering
   // with the Supabase client, your users may be randomly logged out.
-
+ 
   const { data } = await supabase.auth.getClaims();
 
+  
   const user = data?.claims;
 
-  /*
+ 
   if (
     request.nextUrl.pathname !== "/" &&
     !user &&
