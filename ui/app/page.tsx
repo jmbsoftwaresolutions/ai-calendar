@@ -32,7 +32,7 @@ export default async function Home() {
             </p>
             <p className="mt-10">
               You can describe the event in plain English, and the AI will
-              generate the even on your calendar.
+              generate the event on your calendar.
             </p>
             <p className="mt-10">
               Sign in to get started! This will give the application access to
