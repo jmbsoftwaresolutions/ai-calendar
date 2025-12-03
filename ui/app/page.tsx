@@ -30,7 +30,14 @@ export default async function Home() {
               This is a demo application that will take natural language input
               to create a event on your google calendar.
             </p>
-            <p className="mt-10">Sign in to get started!</p>
+            <p className="mt-10">
+              You can describe the event in plain English, and the AI will
+              generate the even on your calendar.
+            </p>
+            <p className="mt-10">
+              Sign in to get started! This will give the application access to
+              create events on your calendar!
+            </p>
           </>
         )}
       </main>
