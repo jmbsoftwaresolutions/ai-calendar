@@ -47,7 +47,7 @@ export default function RootLayout({
                   height={30}
                 />
               </a>
-              <a href="https://github.com/jmbsoftwaresolutions">
+              <a href="https://github.com/jmbsoftwaresolutions/ai-calendar">
                 <GitHubLogoIcon
                   className="text-muted-foreground"
                   width={30}
